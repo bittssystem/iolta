@@ -1,0 +1,26 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    
+<p>
+    <a class="btn btn-light" href="{% url 'coreblock_FinancialTransaction_list' %}">
+    FinancialTransaction Listing
+    </a>
+</p>
+    
+<table class="table">
+    <tr><td>description</td><td>{{ object.description }}</td></tr>
+    <tr><td>amount</td><td>{{ object.amount }}</td></tr>
+    <tr><td>transaction_type</td><td>{{ object.transaction_type }}</td></tr>
+    <tr><td>transaction_date</td><td>{{ object.transaction_date }}</td></tr>
+    <tr><td>vat_flag</td><td>{{ object.vat_flag }}</td></tr>
+    <tr><td>is_trust_transaction</td><td>{{ object.is_trust_transaction }}</td></tr>
+    <tr><td>is_active</td><td>{{ object.is_active }}</td></tr>
+    <tr><td>deleted_at</td><td>{{ object.deleted_at }}</td></tr>
+    <tr><td>created_at</td><td>{{ object.created_at }}</td></tr>
+    <tr><td>updated_at</td><td>{{ object.updated_at }}</td></tr>
+</table>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Edit</a>
+
+{% endblock %}
