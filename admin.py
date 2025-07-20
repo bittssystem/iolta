@@ -1,0 +1,50 @@
+from django.contrib import admin
+from iolat.models import Client, Employee, Matter, FinancialTransaction, ChartOfAccount, Creditor, Debtor, SystemAccount, VatRate
+
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'is_trust', 'income_ytd', 'expense_ytd', 'trust_balance', 'is_active')
+    list_filter = ('is_trust', 'is_active')
+    search_fields = ('name', 'email', 'identity_number')
+
+@admin.register(Employee)
+class EmployeeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'is_active')
+    search_fields = ('name', 'email')
+
+@admin.register(Matter)
+class MatterAdmin(admin.ModelAdmin):
+    list_display = ('description', 'client', 'matter_type', 'status', 'is_active')
+    list_filter = ('matter_type', 'status', 'is_active')
+    search_fields = ('description', 'client__name')
+
+@admin.register(FinancialTransaction)
+class FinancialTransactionAdmin(admin.ModelAdmin):
+    list_display = ('description', 'matter', 'amount', 'transaction_type', 'transaction_date', 'is_active')
+    list_filter = ('transaction_type', 'is_trust_transaction', 'is_active')
+    search_fields = ('description', 'matter__client__name')
+
+@admin.register(ChartOfAccount)
+class ChartOfAccountAdmin(admin.ModelAdmin):
+    list_display = ('code', 'name', 'account_type', 'is_active')
+    list_filter = ('account_type', 'is_active')
+    search_fields = ('code', 'name')
+
+@admin.register(Creditor)
+class CreditorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'amount_owed', 'client', 'is_active')
+    search_fields = ('name', 'client__name')
+
+@admin.register(Debtor)
+class DebtorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'amount_due', 'client', 'is_active')
+    search_fields = ('name', 'client__name')
+
+@admin.register(SystemAccount)
+class SystemAccountAdmin(admin.ModelAdmin):
+    list_display = ('type', 'account', 'is_active')
+
+@admin.register(VatRate)
+class VatRateAdmin(admin.ModelAdmin):
+    list_display = ('rate', 'effective_from', 'effective_to')
+    list_filter = ('effective_from', 'effective_to')
