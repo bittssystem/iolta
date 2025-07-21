@@ -1,5 +1,3 @@
-test
-
 from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -24,8 +22,8 @@ class VatRateManager(models.Manager):
         """Get the VAT rate effective for a given date."""
         try:
             return self.filter(
-                effective_from__lte=date, 
-                Q(effective_to__gte=date) | Q(effective_to__isnull=True)
+                Q(effective_to__gte=date) | Q(effective_to__isnull=True),
+                effective_from__lte=date
             ).order_by('-effective_from').first().rate
         except AttributeError:
             raise BusinessLogicError(f"No VAT rate defined for date {date}.")
@@ -58,7 +56,8 @@ class VatRate(models.Model):
             raise ValidationError({'effective_to': "Effective end date must be after start date."})
         # Check for overlapping periods
         overlapping = VatRate.objects.filter(
-            effective_from__lte=self.effective_to if self.effective_to else datetime.date(9999, 12, 31),
+            effective_from__lte=self.effective_to if self.effective_to else datetime.date(9999, 12, 31)
+        ).filter(
             Q(effective_to__gte=self.effective_from) | Q(effective_to__isnull=True)
         ).exclude(pk=self.pk)
         if overlapping.exists():
