@@ -31,12 +31,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'simple_history',
+    'coreblock',
 ]
 
 MIDDLEWARE = [
@@ -115,8 +118,66 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles' # <-- ADDED THIS LINE
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# iolta/settings.py
+
+JAZZMIN_SETTINGS = {
+    # Title of the UI, a default goes to django admin
+    "site_title": "IOLTA Admin",
+    # Title on the brand, a default goes to current apps name
+    "site_header": "IOLTA",
+    # Welcome text
+    "welcome_text": "Welcome to the IOLTA Admin",
+    # Copyright on the footer
+    "copyright": "Kruge 2024",
+    # The model admin to search from the search bar, search bar omitted if omitted
+    "search_model": "auth.User", # You can change this to any model, e.g., "coreblock.Client"
+    # Related Modal for FK selection
+    "related_modal_active": True, # This often improves ForeignKey selection
+    # Other settings can go here
+    "show_ui_builder": True, # For playing with settings in the UI
+}
+
+# Optional: Configure UI builder (for production, set to False)
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-navy",
+    "accent": "accent-primary",
+    "navbar": "navbar-navy navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": True,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "darkly", # You can try different themes like "flatly", "darkly", "cerulean" etc.
+    "dark_mode_listener": True,
+    "sidebar_nav_elemet_colour": "primary",
+    "button_classes": {
+        "primary": "btn-outline-primary",
+        "secondary": "btn-outline-secondary",
+        "info": "btn-outline-info",
+        "warning": "btn-outline-warning",
+        "danger": "btn-outline-danger",
+        "success": "btn-outline-success"
+    },
+    "actions_classes": {
+        "btn-group": "btn-group-sm",
+        "btn-primary": "btn-outline-primary"
+    }
+}

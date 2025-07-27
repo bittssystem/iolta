@@ -23,4 +23,5 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html'), name='index'),
     path('coreblock/', include('coreblock.urls')),
     path('admin/', admin.site.urls),
+    # path('autocomplete/', include('dal_select2.urls')), # <--- THIS IS THE CHANGE]
 ]
