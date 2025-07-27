@@ -319,14 +319,13 @@ class FinancialTransaction(models.Model):
 
         # Ensure trust transactions use a trust account and non-trust transactions do not
         is_trust_account = False # Default to False if account is not set
-        if self.account: # <-- Added this check
+        if self.account_id: # <-- CHANGED TO THIS
+            # Only try to access self.account if the ID is present
             is_trust_account = self.account.account_type == 'TRUST'
         else:
-            # If account is not set, we cannot determine its type.
-            # Django's form validation for a required ForeignKey should ideally catch this
-            # earlier and present a "This field is required" error.
-            # This 'else' block ensures clean() doesn't crash here.
-            pass # Let default form validation handle the missing required field.
+            # If account_id is None, it means the FK is not set.
+            # Django's default form validation for required FKs will handle the error.
+            pass
 
         if self.is_trust_transaction and not is_trust_account:
             raise ValidationError("Trust transactions must use a Trust account from Chart of Accounts.")
@@ -352,15 +351,14 @@ class FinancialTransaction(models.Model):
 
         # Determine if it's a trust transaction based on account type
         # This line will only execute if self.account is set after full_clean()
-        if self.account: # Add this check here too, for safety.
+        if self.account_id: # <-- CHANGED TO THIS
             self.is_trust_transaction = (self.account.account_type == 'TRUST')
+        else:
+            # If account_id is None, is_trust_transaction cannot be determined
+            # based on account type. It should already be caught by validation.
+            self.is_trust_transaction = False # Default if no account
 
         super().save(*args, **kwargs)
-
-        # Post-save logic (moved from original to signals if applicable)
-        # This part ensures balances are updated after the transaction is saved.
-        # It's good that you're using signals for balance updates.
-        # This 'save' method logic should focus only on transaction-specific logic.
 
     def calculate_vat(self):
         if not self.vat_flag:
